@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video to Social Media</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .upload-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+        }
+        input[type="file"], input[type="url"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background: #0077b5;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #005885;
+        }
+        .posts-section {
+            margin-top: 40px;
+        }
+        .post-item {
+            background: #f9f9f9;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #0077b5;
+        }
+        .alert {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .alert-error {
+            background: #fee;
+            color: #c33;
+            border: 1px solid #c33;
+        }
+        .alert-success {
+            background: #efe;
+            color: #3c3;
+            border: 1px solid #3c3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Video to Social Media Pipeline</h1>
+        
+        {% if request.session.get('error') %}
+            <div class="alert alert-error">
+                {{ request.session.pop('error') }}
+            </div>
+        {% endif %}
+        {% if request.session.get('success') %}
+            <div class="alert alert-success">
+                {{ request.session.pop('success') }}
+            </div>
+        {% endif %}
+        
+        <div class="upload-section">
+            <h2>Upload Video</h2>
+            <form method="POST" action="/upload" enctype="multipart/form-data">
+                <label>Upload Video File:</label>
+                <input type="file" name="video_file" accept="video/*">
+                
+                <label style="margin-top: 20px; display: block;">OR Enter YouTube URL:</label>
+                <input type="url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=...">
+                
+                <button type="submit" style="margin-top: 15px;">Process Video</button>
+            </form>
+        </div>
+        
+        <div class="posts-section">
+            <h2>Posted Content</h2>
+            {% if posts %}
+                {% for post in posts %}
+                    <div class="post-item">
+                        <strong>{{ post.platform }}</strong>
+                        <p>{{ post.content[:200] }}...</p>
+                        <small>Status: {{ post.status }} | ID: {{ post.post_id }}</small>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <p>No posts yet. Upload a video to get started.</p>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
